@@ -1,0 +1,16 @@
+# ANEW project defaults for OpenAI Codex.
+# Codex loads project .codex/ configuration only after the project is trusted.
+
+# Keep command execution approval-gated while allowing edits in the current workspace.
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+# AGENTS.md is a concise signpost, but nested instructions can add project context.
+project_doc_max_bytes = 65536
+
+[agents]
+enabled = true
+
+[agents.reviewer]
+description = "Independent, read-only ANEW reviewer for checking a change against its spec."
+config_file = "agents/reviewer.toml"

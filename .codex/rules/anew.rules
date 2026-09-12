@@ -1,0 +1,74 @@
+# ANEW command guardrails for Codex.
+# These rules apply when Codex requests to run matching commands outside the sandbox.
+
+prefix_rule(
+    pattern = ["git", "push", "--force"],
+    decision = "forbidden",
+    justification = "ANEW forbids force pushes. Use a normal push or obtain an explicit human decision.",
+    match = ["git push --force", "git push --force origin main"],
+    not_match = ["git push origin main"],
+)
+
+prefix_rule(
+    pattern = ["git", "push", "-f"],
+    decision = "forbidden",
+    justification = "ANEW forbids force pushes. Use a normal push or obtain an explicit human decision.",
+    match = ["git push -f", "git push -f origin main"],
+    not_match = ["git push origin main"],
+)
+
+prefix_rule(
+    pattern = ["git", "push", "--force-with-lease"],
+    decision = "forbidden",
+    justification = "ANEW forbids force pushes. Use a normal push or obtain an explicit human decision.",
+    match = ["git push --force-with-lease origin main"],
+    not_match = ["git push origin main"],
+)
+
+prefix_rule(
+    pattern = ["git", "reset", "--hard"],
+    decision = "forbidden",
+    justification = "ANEW protects recoverable history. Use a targeted revert or ask the human first.",
+    match = ["git reset --hard HEAD"],
+    not_match = ["git reset HEAD -- file.txt"],
+)
+
+prefix_rule(
+    pattern = ["git", "rebase"],
+    decision = "forbidden",
+    justification = "ANEW keeps history recoverable. Use a normal merge or ask the human first.",
+    match = ["git rebase main", "git rebase --abort"],
+    not_match = ["git merge main"],
+)
+
+prefix_rule(
+    pattern = ["rm", "-rf"],
+    decision = "forbidden",
+    justification = "ANEW blocks recursive force deletion. Remove a targeted path only after human review.",
+    match = ["rm -rf build", "rm -rf /tmp/work"],
+    not_match = ["rm build.log"],
+)
+
+prefix_rule(
+    pattern = ["rm", "-fr"],
+    decision = "forbidden",
+    justification = "ANEW blocks recursive force deletion. Remove a targeted path only after human review.",
+    match = ["rm -fr build"],
+    not_match = ["rm -r build"],
+)
+
+prefix_rule(
+    pattern = ["rm", "-r", "-f"],
+    decision = "forbidden",
+    justification = "ANEW blocks recursive force deletion. Remove a targeted path only after human review.",
+    match = ["rm -r -f build"],
+    not_match = ["rm -r build"],
+)
+
+prefix_rule(
+    pattern = ["rm", "-f", "-r"],
+    decision = "forbidden",
+    justification = "ANEW blocks recursive force deletion. Remove a targeted path only after human review.",
+    match = ["rm -f -r build"],
+    not_match = ["rm -f build"],
+)

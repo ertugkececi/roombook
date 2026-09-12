@@ -1,0 +1,8 @@
+interface:
+  display_name: "ANEW workflow"
+  short_description: "Run ANEW's spec, plan, review, and evidence gates in Codex."
+  default_prompt: "Apply the ANEW workflow to this request, starting from the matching workflow file and honoring AGENTS.md."
+
+policy:
+  allow_implicit_invocation: true
+

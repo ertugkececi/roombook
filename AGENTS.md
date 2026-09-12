@@ -1,39 +1,48 @@
-# RoomBook · Codex çalışma kuralları
+# AGENTS.md — Project Rules
 
-Bu repo, ANEW RoomBook eğitimindeki uygulama reposudur. Çalışmayı Türkçe açıklayabilir,
-ancak kod, API sözleşmeleri, domain terimleri ve test adları İngilizce olmalıdır.
+> **STATUS: NOT CONFIGURED.** This workspace has not been adapted to a project yet.
+> The only correct first action is the bootstrap workflow (`workflows/bootstrap.md`).
+> Until bootstrap completes and rewrites this file, do not write application code.
 
-## Çalışma sırası
+## Operating mode
 
-1. Önce `PLAYBOOK.md` içindeki ilgili adımı oku.
-2. Bir özellik için önce `docs/specs/` altında yazılı ve kabul kriterleri olan bir spec oluştur.
-3. Spec onaylanmadan uygulama koduna geçme.
-4. Planı dosyalara ve testlere bağla; plan dışı dosya değişikliği yapma.
-5. Uygulamadan sonra format/lint, unit test ve entegrasyon testlerini çalıştır.
-6. Test çıktısını ve değişen dosyaları incelemeden “tamamlandı” deme.
+**Mode: unset** — bootstrap sets this to `lite` or `strict` (see `workflows/README.md`).
+Every workflow honors the gates of the current mode.
 
-## Kalite kapıları
+## Invariant rules (these survive bootstrap — never delete or weaken them)
 
-- Zaman aralıklarında çakışma kuralı: `[start, end)`; `10:00–11:00` ile `11:00–12:00`
-  çakışmaz.
-- Geçersiz aralıklar (`start >= end`) reddedilir.
-- Hata cevapları sabit, makinece okunabilir bir şemaya sahip olmalıdır.
-- Conflict cevabı mümkünse önerilen boş slotları ve çakışan rezervasyonu içermelidir.
-- Her davranış için anlamlı bir test ve testin gerçekten çalıştığını gösteren çıktı gerekir.
-- Gizli bilgi, token veya yerel makineye özel yol commit edilmez.
+1. **No spec, no code.** Every piece of work starts as a spec in `specs/active/` (from `specs/TEMPLATE.md`).
+2. **Plan before build.** A human approves the plan before any code is written.
+3. **The producer never verifies its own work.** Review and QA run in a separate session or a read-only subagent, working from files (diff + spec), never from the builder's chat.
+4. **Evidence over claims.** "Done" requires `scripts/check` green and every acceptance criterion mapped to proof. Never claim completion without showing evidence.
+5. **Tests are protected.** Weakening asserts, deleting or skipping tests to get to green is forbidden — always.
+6. **Proposal rule.** Every question, option, or finding comes with your own recommendation and rationale. The human decides; nothing is applied without approval.
+7. **Shipped specs are immutable.** Files under `specs/done/` are never edited.
+8. **Uncertainty is surfaced, not assumed.** On ambiguity or a docs/code conflict: stop and use the matching recovery ramp (`prompts/recovery/`).
 
-## Codex davranışı
+## Where things live
 
-Codex kod yazmadan önce kısa bir plan ve etkilenecek dosyaları belirtir. Belirsiz bir ürün
-kararını varsaymak yerine seçenekleri ve etkisini sorar. Mevcut testleri silmez veya gevşetmez.
-Bir kalite kapısı başarısızsa bunu gizlemez; hatayı düzeltir ya da açıkça raporlar.
+| What | Where |
+|---|---|
+| Architecture & boundaries | `docs/architecture.md` |
+| Domain language & business rules | `docs/domain.md` |
+| Coding conventions | `docs/conventions.md` |
+| Testing rules | `docs/testing.md` |
+| Security rules | `docs/security.md` |
+| Git & branching rules | `docs/git.md` |
+| Decisions with rationale (ADRs) | `docs/decisions/` |
+| Roles (who may do what) | `docs/roles/` |
+| Specs & plans | `specs/active/` · `specs/plans/` · shipped → `specs/done/` |
+| Processes & gates | `workflows/` |
+| Reusable prompts & recovery ramps | `prompts/` |
+| The single verification command | `scripts/check` |
 
-## Teslim kanıtı
+## RoomBook-specific context
 
-Her teslimde şunları raporla:
-
-- çalıştırılan komutlar ve sonuçları,
-- eklenen veya değişen testler,
-- bilinçli olarak kapsam dışında bırakılan noktalar,
-- `git diff --stat` ve çalışma ağacının durumu.
-
+- Product: RoomBook, a meeting-room booking API that detects conflicts and suggests nearest free slots.
+- Domain terms: Room, Booking, TimeSlot, Conflict, BusinessHours.
+- Time intervals use `[start, end)` semantics; back-to-back bookings are allowed.
+- All times are UTC ISO-8601; local date/time types are forbidden.
+- V1 intentionally has in-memory storage, no authentication, and one office; record changes as decisions.
+- Error responses use `{ error, detail }` and must not expose internal technical details.
+- Read `PLAYBOOK.md` for the teaching sequence and answer sheet before bootstrap.

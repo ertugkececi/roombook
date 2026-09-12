@@ -7,6 +7,11 @@
 >
 > **Süre:** ~1,5–2 saat (kurulum dahil) · **Dil:** istediğin dil — C#, Java, Python, JS/TS, Go...
 > **Sonunda elinde:** AI ile spec'ten teslime, kanıtlı ve kontrollü geliştirilmiş, çalışan bir API.
+
+> **Codex kullanıyorsan:** Bu repo Codex adapter'ı ile hazırlanmıştır. `./scripts/init` adımını
+> tekrar etmene gerek yok; repo kökünde `codex` çalıştırıp `$anew-workflow` skill'ini çağır.
+> Claude Code'a özel slash komutlarının Codex karşılığı aynı `workflows/` dosyalarını ve bu
+> skill'i kullanır.
 >
 > 💡 Bu rehberde **domain dili İngilizcedir** (Room, Booking, TimeSlot...). Bilinçli bir tercih:
 > gerçek dünyada ekiplerin ortak dili (ubiquitous language) çoğunlukla İngilizcedir ve kod,
@@ -82,6 +87,15 @@ ad: `roombook`. (Fork değildir — tertemiz, tamamen senin olan bir repo oluşu
 ./scripts/init claude-code
 ```
 
+Codex alternatifi:
+
+```bash
+./scripts/init codex
+```
+
+Sonra `codex` aç ve oturum içinde `$anew-workflow` çağır. Proje trusted olarak onaylanırsa
+`.codex/` içindeki onay, reviewer ve komut kuralları da yüklenir.
+
 **Ne görmelisin:** `Installed: CLAUDE.md, .claude/ (commands, agents, hooks, settings).`
 
 Bu komut sana bir ekip kurdu: slash komutlar, kod yazması **fiziksel olarak engellenmiş** bir
@@ -102,10 +116,18 @@ denetçi ajanı, tehlikeli komutları bloklayan izinler ve teslim edilmiş spec'
 
 ## 2. Bootstrap — AI'a projeyi öğret (~15 dk)
 
-Terminale `claude` yaz; Claude Code açılınca (`>` prompt'u) şunu yaz:
+Claude Code kullanıyorsan terminale `claude` yaz; Claude Code açılınca (`>` prompt'u) şunu yaz:
 
 ```
 /bootstrap
+```
+
+Codex kullanıyorsan oturum içinde şunu yaz:
+
+```text
+$anew-workflow
+Bootstrap this RoomBook workspace. Read PLAYBOOK.md and workflows/bootstrap.md first.
+Ask me the project decisions one by one; do not write application code until the required gates pass.
 ```
 
 > ⚠️ **Sık hata:** `/bootstrap` bir terminal komutu değildir — Git Bash'e değil, Claude Code'un
